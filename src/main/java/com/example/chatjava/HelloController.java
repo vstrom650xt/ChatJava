@@ -56,9 +56,10 @@ public class HelloController {
             System.out.println(IP);
             int port = Integer.parseInt(portIn.getText());
             name = nameIn.getText();
-
             Socket socket = new Socket(IP, port);
-            communicationManager = new CommunicationManager(socket, channelManager); // Usa la variable de instancia channelManager
+
+            // Utiliza la instancia de channelManager de la clase
+            communicationManager = new CommunicationManager(socket, channelManager);
             Thread thread = new Thread(communicationManager);
             thread.setDaemon(true);
             thread.start();
@@ -72,6 +73,7 @@ public class HelloController {
             e.printStackTrace();
         }
     }
+
     @FXML
     protected void setSendButtonClick() {
         if (communicationManager != null) {
