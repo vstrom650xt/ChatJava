@@ -57,6 +57,7 @@ public class CommunicationManager implements Runnable {
                 channelManager.broadcast(message, this);
             }
         } catch (IOException | ClassNotFoundException e) {
+            // Manejar la desconexión del cliente (puedes imprimir un mensaje)
             e.printStackTrace();
         } finally {
             closeResources();
