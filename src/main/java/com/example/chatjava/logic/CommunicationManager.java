@@ -10,9 +10,7 @@ import java.net.Socket;
 public class CommunicationManager implements Runnable {
     private ObjectInputStream ois;
     private ObjectOutputStream oos;
-    private ChannelManager channelManager;  // Agregado para la referencia al ChannelManager
-
-    // Modificado para aceptar un ChannelManager como argumento
+    private ChannelManager channelManager;
     public CommunicationManager(Socket socket, ChannelManager channelManager) {
         try {
             this.oos = new ObjectOutputStream(socket.getOutputStream());
@@ -51,16 +49,23 @@ public class CommunicationManager implements Runnable {
         try {
             while (true) {
                 Message message = (Message) ois.readObject();
+                if (message == null) {
+                    // El cliente ha cerrado la conexión
+                    break;
+                }
                 System.out.println("Received message " + message.getText());
 
                 // Llama al método del ChannelManager para enviar el mensaje a todos los clientes
                 channelManager.broadcast(message, this);
             }
         } catch (IOException | ClassNotFoundException e) {
-            // Manejar la desconexión del cliente (puedes imprimir un mensaje)
-            e.printStackTrace();
+            // Manejar la desconexión del cliente
+            System.err.println("Cliente desconectado: " + e.getMessage());
         } finally {
+            // Elimina el CommunicationManager desconectado
+            channelManager.remove(this);
             closeResources();
         }
     }
+
 }
