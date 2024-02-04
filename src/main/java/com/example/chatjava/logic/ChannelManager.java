@@ -1,22 +1,24 @@
 package com.example.chatjava.logic;
 
-
 import com.example.chatjava.model.Message;
+import com.example.chatjava.server.ServerTcp;
 
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class ChannelManager {
+
+    private ServerTcp server; // Añade una referencia al servidor
+
     private List<CommunicationManager> communicationManagerList;
 
-    public ChannelManager() {
+    public ChannelManager(ServerTcp server) {
+        this.server = server;
         communicationManagerList = new ArrayList<>();
     }
-
     public void add(Socket socket) {
-        CommunicationManager c = new CommunicationManager(socket);
+        CommunicationManager c = new CommunicationManager(socket,this);
         communicationManagerList.add(c);
 
         Thread thread = new Thread(c);
@@ -25,9 +27,7 @@ public class ChannelManager {
     }
 
     public void broadcast(Message message, CommunicationManager sender) {
-        Iterator<CommunicationManager> iterator = communicationManagerList.iterator();
-        while (iterator.hasNext()) {
-            CommunicationManager c = iterator.next();
+        for (CommunicationManager c : communicationManagerList) {
             if (c != sender) {
                 c.send(message);
             }

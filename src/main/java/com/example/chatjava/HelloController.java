@@ -1,5 +1,6 @@
 package com.example.chatjava;
 
+import com.example.chatjava.logic.ChannelManager;
 import com.example.chatjava.logic.CommunicationManager;
 import com.example.chatjava.model.Message;
 import javafx.application.Platform;
@@ -44,6 +45,7 @@ public class HelloController {
 
     private String name;
     private CommunicationManager communicationManager;
+    private ChannelManager channelManager ;
 
 
 
@@ -56,7 +58,7 @@ public class HelloController {
             name = nameIn.getText();
 
             Socket socket = new Socket(IP, port);
-            communicationManager = new CommunicationManager(socket);
+            communicationManager = new CommunicationManager(socket, channelManager); // Usa la variable de instancia channelManager
             Thread thread = new Thread(communicationManager);
             thread.setDaemon(true);
             thread.start();
