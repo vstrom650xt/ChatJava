@@ -58,7 +58,7 @@ public class HelloController {
             name = nameIn.getText();
 
             Socket socket = new Socket(IP, port);
-            communicationManager = new CommunicationManager(socket, channelManager); // Usa la variable de instancia channelManager
+            communicationManager = new CommunicationManager(socket, channelManager,boxmensa); // Usa la variable de instancia channelManager
             Thread thread = new Thread(communicationManager);
             thread.setDaemon(true);
             thread.start();

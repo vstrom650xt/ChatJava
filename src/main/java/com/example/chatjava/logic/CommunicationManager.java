@@ -21,17 +21,18 @@ public class CommunicationManager implements Runnable {
     @FXML
     private VBox boxmensa;
 
-    public CommunicationManager(Socket socket, ChannelManager channelManager) {
+    public CommunicationManager(Socket socket, ChannelManager channelManager, VBox boxmensa) {
         try {
             this.oos = new ObjectOutputStream(socket.getOutputStream());
             this.ois = new ObjectInputStream(socket.getInputStream());
             this.channelManager = channelManager;
-            this.boxmensa = new VBox();  // Initialize the reference to the shared VBox
+            this.boxmensa = boxmensa;  // Asigna la referencia pasada como parámetro
         } catch (IOException e) {
             e.printStackTrace();
             closeResources();
         }
     }
+
 
     private void closeResources() {
         try {
@@ -62,13 +63,15 @@ public class CommunicationManager implements Runnable {
                 Message message = (Message) ois.readObject();
                 System.out.println("Received message " + message.getText());
 
-                // Envía el mensaje al VBox de la interfaz gráfica
-                Platform.runLater(() -> {
-                    Label label = new Label(message.toString());
-                    HBox hBox = new HBox(label);
-                    hBox.setAlignment(Pos.CENTER_LEFT);
-                    boxmensa.getChildren().add(hBox);
-                });
+                // Envía el mensaje al VBox de la interfaz gráfica si boxmensa no es nulo
+                if (boxmensa != null) {
+                    Platform.runLater(() -> {
+                        Label label = new Label(message.toString());
+                        HBox hBox = new HBox(label);
+                        hBox.setAlignment(Pos.CENTER_LEFT);
+                        boxmensa.getChildren().add(hBox);
+                    });
+                }
 
                 // Envía el mensaje a todos los clientes conectados
                 channelManager.broadcast(message, this);
