@@ -56,10 +56,9 @@ public class HelloController {
             System.out.println(IP);
             int port = Integer.parseInt(portIn.getText());
             name = nameIn.getText();
-            Socket socket = new Socket(IP, port);
 
-            // Utiliza la instancia de channelManager de la clase
-            communicationManager = new CommunicationManager(socket, channelManager);
+            Socket socket = new Socket(IP, port);
+            communicationManager = new CommunicationManager(socket, channelManager); // Usa la variable de instancia channelManager
             Thread thread = new Thread(communicationManager);
             thread.setDaemon(true);
             thread.start();
@@ -69,11 +68,9 @@ public class HelloController {
             nameIn.setEditable(false);
             enviarBtn.setDisable(false);
         } catch (IOException e) {
-            // Manejar la excepción de manera adecuada, por ejemplo, mostrar un mensaje de error al usuario
             e.printStackTrace();
         }
     }
-
     @FXML
     protected void setSendButtonClick() {
         if (communicationManager != null) {
