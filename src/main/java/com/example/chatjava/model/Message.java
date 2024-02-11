@@ -32,10 +32,9 @@ public class Message  implements Serializable {
 
    @Override
    public String toString() {
-      return "Message{" +
-              "user='" + user + '\'' +
-              ", text='" + text + '\'' +
-              '}';
+      return
+              user + '\'' +
+              "-->" + text ;
    }
 
 
